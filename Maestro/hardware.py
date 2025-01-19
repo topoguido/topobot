@@ -4,7 +4,7 @@ import dht
 class sensor:
     
     def __init__(self):
-        self.sensor_temp = dht.DHT11(machine.Pin(0, machine.Pin.IN))
+        self.sensor_temp = dht.DHT11(machine.Pin(1, machine.Pin.IN))
     
     def update_values(self):
         self.sensor_temp.measure()

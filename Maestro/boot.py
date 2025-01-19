@@ -7,7 +7,8 @@ if not sta_if.isconnected():
     sta_if.active(True)
     sta_if.scan()
     sta_if.connect(wifi_config['ssid'], wifi_config['password'])
-    print(f'Mi MAC es: {print(ubinascii.hexlify(sta_if('mac')).decode())}')
+    wlan_mac = sta_if.config("mac")
+    print(f'Mi MAC es: {ubinascii.hexlify(wlan_mac).decode()}')
     print('Esperando red')
     while not sta_if.isconnected():
         pass

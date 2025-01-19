@@ -9,5 +9,5 @@ utelegram_config = {
 }
 
 wlan_com = {
-    'mac_sensortx': ''
+    'mac_sensortx': bytes.fromhex('98cdac0de5bb')
 }
