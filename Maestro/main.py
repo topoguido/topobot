@@ -11,11 +11,12 @@ import espnow
 print('Iniciando bot')
 bot = utelegram.ubot(utelegram_config['token'], True)
 bot.saluda(utelegram_config['chat_id_default'])
+rele = hardware.rele() # relé utilizado para hacer saltar al diferencial
 sensor_st = hardware.sensor()  # sensor del estudio
 dir_sensor_tx = wlan_com.get('mac_sensortx')
 e = espnow.ESPNow()
+e.config(timeout_ms=3000)
 e.active(True)
-e.config(timeout_ms=2000)
 e.add_peer(dir_sensor_tx)
 
 while True:
@@ -35,8 +36,8 @@ while True:
             # ubicados en la planta transmisora.
             print("Solicitando datos al sensor del transmisor")
             e.send(dir_sensor_tx, "values")
-            msg, host = e.recv()
-            if msg is not None:
+            host, msg = e.recv(timeout_ms=2000)
+            if msg:
                 data = msg.decode('utf-8').split(',')
                 print(f'Datos recibidos de sensor del transmisor {data}')
                 temp = data[0]
@@ -51,7 +52,11 @@ while True:
             # se activa relé que pone a tierra el vivo de la red de 220V.
             print('Ejecutando apagado de emergencia')
             bot.send(bot.chat_id, "Ok, vamos a cortar la energía")
-        
+            if rele.shutdown():
+                bot.send(bot.chat_id, "Se ha cortado la energía")
+            else:
+                bot.send(bot.chat_id, "Parece que no lo he logrado")
+
         elif bot.command == '/saluda':
             print('Saludando a pedido')
             bot.send(bot.chat_id, f'Hola {bot.chat_name}, saludos!')
