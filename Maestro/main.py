@@ -10,12 +10,12 @@ import espnow
 
 print('Iniciando bot')
 bot = utelegram.ubot(utelegram_config['token'], True)
-bot.saluda(utelegram_config['chat_id_default'])
+#bot.saluda(utelegram_config['chat_id_default'])
 rele = hardware.rele() # relé utilizado para hacer saltar al diferencial
 sensor_st = hardware.sensor()  # sensor del estudio
 dir_sensor_tx = wlan_com.get('mac_sensortx')
 e = espnow.ESPNow()
-e.config(timeout_ms=3000)
+#e.config(timeout_ms=3000)
 e.active(True)
 e.add_peer(dir_sensor_tx)
 
@@ -29,14 +29,13 @@ while True:
         elif bot.command == '/temp':
             # Obtiene los valores de temperatura y humedad del sensor cableado (estudio)
             sensor_st.update_values()
-            time.sleep(1)
             bot.send(bot.chat_id, f'Estudio: Temperatura: {sensor_st.get_temp()} - Humedad: {sensor_st.get_hum()}')
             
             # Se solicitan al dispositivo ESP01 por wifi que devuelva los datos del sensor
             # ubicados en la planta transmisora.
             print("Solicitando datos al sensor del transmisor")
             e.send(dir_sensor_tx, "values")
-            host, msg = e.recv(timeout_ms=2000)
+            host, msg = e.recv(timeout_ms=3000)
             if msg:
                 data = msg.decode('utf-8').split(',')
                 print(f'Datos recibidos de sensor del transmisor {data}')
