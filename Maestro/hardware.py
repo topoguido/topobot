@@ -1,11 +1,11 @@
-import machine 
+from machine import Pin
 import dht
 from time import sleep
 
 class sensor:
     
     def __init__(self):
-        self.sensor_temp = dht.DHT11(machine.Pin(1, machine.Pin.IN))
+        self.sensor_temp = dht.DHT11(Pin(1, Pin.IN))
     
     def update_values(self):
         self.sensor_temp.measure()
@@ -18,7 +18,7 @@ class sensor:
     
 class rele:
     def __init__(self):
-        self.rele = machine.Pin(2, machine.Pin.OUT)
+        self.rele = Pin(2, Pin.OUT)
 
     def shutdown(self):
         self.rele.value(1)
