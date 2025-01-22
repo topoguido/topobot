@@ -1,12 +1,9 @@
-import time
-import gc
 import urequests
 
 class ubot:
     
     def __init__(self, token, debug):
         self.url = 'https://api.telegram.org/bot' + token
-        #self.default_handler = self.get_message
         self.default_handler = None
         self.message_offset = 0
         self.commands = self.getCommands()
@@ -45,9 +42,6 @@ class ubot:
             return None
         finally:
             response.close()
-    
-    # def get_message(self, message):
-    #     self.send(message['message']['chat']['id'], 'Procesando tu solicitud...')
 
     def reply_ping(self, chat_id):
         if self.debug: print('Respondiendo al ping')
@@ -88,13 +82,6 @@ class ubot:
             if self.debug: print("OSError: request timed out")
             return None
 
-    # def listen(self):
-    #     while True:
-    #         return self.read_once()
-                
-    #         time.sleep(self.sleep_btw_updates)
-    #         gc.collect()
-
     def read_once(self):
         messages = self.read_messages()
         if messages:
@@ -107,10 +94,6 @@ class ubot:
                     if message['update_id'] >= self.message_offset:
                         self.message_offset = message['update_id']
                         return self.message_handler(message)
-                        #break
-
-    # def set_default_handler(self, handler):
-    #     self.default_handler = handler
 
     def message_handler(self, message):
         if 'text' in message['message']:
@@ -131,7 +114,5 @@ class ubot:
                             self.commandOK = False
                             self.send(message['message']['chat']['id'], 'No reconozco ese comando \U0001F611')
                             return False
-                            # if self.default_handler:
-                            #     self.default_handler(message)
             else:
                 print(f'Es un mensaje normal con el texto: {parts}')

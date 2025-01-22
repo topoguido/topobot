@@ -15,14 +15,16 @@ rele = Pin(4,Pin.OUT)
 sensor = dht.DHT11(Pin(5, Pin.IN))
 
 async def rele_control():
-    
-    while True:
-        print('Rele a cero')
-        rele.value(0)
-        await asyncio.sleep(2)
-        print('Rele a uno')
-        rele.value(1)
-        await asyncio.sleep(2)
+      while True:
+            sensor.measure()
+            temp = sensor.temperature()
+            print(f'Temperatura: {temp}')
+            if temp > 28:
+                #enciende ventilador
+                rele.value(1)
+            elif temp < 28:
+                rele.value(0)
+            await asyncio.sleep(6)    
 
 async def msg_control():
     e = espnow.ESPNow()
