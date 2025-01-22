@@ -24,7 +24,6 @@ async def rele_control():
 async def msg_control():
     e = espnow.ESPNow()
     e.active(True)
-    #master = wlan_com.get('mac_master')
     master = b'\xff\xff\xff\xff\xff\xff'
     print('Escuchando')
     while True:
