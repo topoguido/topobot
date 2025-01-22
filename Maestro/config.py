@@ -1,6 +1,6 @@
 wifi_config = {
-    'ssid':'PELOTERO',
-    'password':'laclavees1981'
+    'ssid':'CALESITA',
+    'password':'3empanadas'
 }
 
 utelegram_config = {
@@ -9,5 +9,6 @@ utelegram_config = {
 }
 
 wlan_com = {
-    'mac_sensortx': ''
+    #'mac_sensortx': bytes.fromhex('98cdac0de5bb')
+    'mac_sensortx': bytes.fromhex('8ece4ee97325')
 }

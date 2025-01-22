@@ -4,32 +4,20 @@ import urequests
 
 class ubot:
     
-    def __init__(self, token, offset, debug):
+    def __init__(self, token, debug):
         self.url = 'https://api.telegram.org/bot' + token
-        
-        self.commands = self.getCommands()
-        
-#         self.default_handler = self.get_message
+        #self.default_handler = self.get_message
         self.default_handler = None
-        self.message_offset = offset
-        self.sleep_btw_updates  = offset if offset > 0 else 3
+        self.message_offset = 0
+        self.commands = self.getCommands()
         self.command = None
         self.commandOK = False
         self.chat_id = ''
+        self.chat_username = ''
+        self.chat_name = ''
         self.debug = debug
         print(f'Lista de comandos: {self.commands}')
        
-        messages = self.read_messages()
-        if messages:
-            if self.message_offset==0:
-                self.message_offset = messages[-1]['update_id']
-            else:
-                for message in messages:
-                    if message['update_id'] >= self.message_offset:
-                        self.message_offset = message['update_id']
-                        break
-
-
     def getCommands(self):
         commands = {}
         try:
@@ -58,8 +46,8 @@ class ubot:
         finally:
             response.close()
     
-    def get_message(self, message):
-        self.send(message['message']['chat']['id'], 'Procesando tu solicitud...')
+    # def get_message(self, message):
+    #     self.send(message['message']['chat']['id'], 'Procesando tu solicitud...')
 
     def reply_ping(self, chat_id):
         if self.debug: print('Respondiendo al ping')
@@ -124,31 +112,21 @@ class ubot:
     # def set_default_handler(self, handler):
     #     self.default_handler = handler
 
-    def set_sleep_btw_updates(self, sleep_time):
-        self.sleep_btw_updates = sleep_time
-
     def message_handler(self, message):
         if 'text' in message['message']:
             parts = message['message']['text'].split(' ')
             if 'entities' in message['message']:
                 for entity in message['message']['entities']:
                     if 'type' in entity and entity['type'] == 'bot_command':
-                        if self.debug: print('Es comando')
                         if parts[0] in self.commands:
-                            if parts[0] == '/ping':
-                                self.reply_ping(message)
-                            else:
-                                if self.debug: print(f'Comando recibido: {parts[0]}')
-                                self.command = parts[0]
-                                self.commandOK = True
-                                self.chat_id = message['message']['chat']['id']
-                                return True
-                                # if parts[0] == '/saluda':
-                                #     self.saluda(message['message']['chat']['id'])
-                                # elif parts[0] == '/ping':
-                                #     self.reply_ping(message)
-                                # elif parts[0] == '/temp':
-                                #     self.return_temp(message['message']['chat']['id'])
+                            if self.debug: print(f'Comando recibido: {parts[0]}')
+                            self.command = parts[0]
+                            self.commandOK = True
+                            self.chat_id = message['message']['chat']['id']
+                            self.chat_username = message['message']['chat']['username']
+                            self.chat_name = message['message']['chat']['first_name']
+                            return True
+
                         else:
                             self.commandOK = False
                             self.send(message['message']['chat']['id'], 'No reconozco ese comando \U0001F611')

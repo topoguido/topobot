@@ -2,14 +2,15 @@ from config import wifi_config
 import network
 import ubinascii
 
-sta_if = network.WLAN(network.STA_IF)
-if not sta_if.isconnected():
-    sta_if.active(True)
-    sta_if.scan()
-    sta_if.connect(wifi_config['ssid'], wifi_config['password'])
-    print(f'Mi MAC es: {print(ubinascii.hexlify(sta_if('mac')).decode())}')
-    print('Esperando red')
-    while not sta_if.isconnected():
+wlan = network.WLAN(network.WLAN.IF_STA)
+if not wlan.isconnected():
+    wlan.active(True)
+    wlan.config(channel=8, pm=wlan.PM_NONE)
+    wlan.connect(wifi_config['ssid'], wifi_config['password'])
+    wlan_mac = wlan.config("mac")
+    print(f'Mi MAC es: {ubinascii.hexlify(wlan_mac).decode()}')
+    print(f'Esperando red - Parametros: SSID: {wifi_config['ssid']} Pass: {wifi_config['password']}')
+    while not wlan.isconnected():
         pass
-    if sta_if.isconnected():
-        print(f'conectado a red con IP {sta_if.ipconfig("addr4")}')
+    if wlan.isconnected():
+        print(f'conectado a red con IP {wlan.ipconfig("addr4")}')
