@@ -119,5 +119,5 @@ class ubot:
                             return False
             else:
                 print(f'Es un mensaje normal con el texto: {parts}')
-                
-            self.message_offset = int(msg['ultimo_id_msg'])
+
+            msg['ultimo_id_msg'] = int(self.message_offset)
