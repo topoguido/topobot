@@ -1,11 +1,12 @@
 import urequests
+from temp import msg
 
 class ubot:
     
     def __init__(self, token, debug):
         self.url = 'https://api.telegram.org/bot' + token
         self.default_handler = None
-        self.message_offset = 0
+        self.message_offset = int(msg['ultimo_id_msg'])
         self.commands = self.getCommands()
         self.command = None
         self.commandOK = False
@@ -118,3 +119,5 @@ class ubot:
                             return False
             else:
                 print(f'Es un mensaje normal con el texto: {parts}')
+                
+            self.message_offset = int(msg['ultimo_id_msg'])
