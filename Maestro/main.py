@@ -24,6 +24,9 @@ e.add_peer(dir_sensor_tx)
 while True:
     print('bot en escucha')
     if bot.read_once():
+
+        utelegram_config['ultimo_id_msg'] = bot.message_offset
+
         # Analiza el comando recibido y responde
         if bot.command == '/ping':
             bot.reply_ping(bot.chat_id)

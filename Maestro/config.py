@@ -5,7 +5,8 @@ wifi_config = {
 
 utelegram_config = {
     'token': '6155203747:AAHXbcoaD_Axnoor4fBVeJQW1fVG4BXjOmk',
-    'chat_id_default': '677317280'
+    'chat_id_default': '677317280',
+    'ultimo_id_msg': 0
 }
 
 wlan_com = {
