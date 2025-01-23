@@ -88,11 +88,13 @@ class ubot:
             if self.debug: print('Mensajes entrantes')
             if self.message_offset==0:
                 self.message_offset = messages[-1]['update_id']
+                print(f(f'MSG_ID: {self.message_offset}'))
                 return self.message_handler(messages[-1])
             else:
                 for message in messages:
                     if message['update_id'] >= self.message_offset:
                         self.message_offset = message['update_id']
+                        print(f(f'MSG_ID: {self.message_offset}'))
                         return self.message_handler(message)
 
     def message_handler(self, message):
