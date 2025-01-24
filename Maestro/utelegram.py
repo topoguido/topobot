@@ -7,7 +7,7 @@ class ubot:
     def __init__(self, token, debug):
         self.url = 'https://api.telegram.org/bot' + token
         self.default_handler = None
-        self.message_offset = msg['ultimo_id_msg']
+        self.message_offset = self.get_msg_id()
         self.commands = self.getCommands()
         self.command = None
         self.commandOK = False
@@ -102,6 +102,7 @@ class ubot:
     def message_handler(self, message):
         if 'text' in message['message']:
             parts = message['message']['text'].split(' ')
+            self.update_temp('temp.py', self.message_offset )
             if 'entities' in message['message']:
                 for entity in message['message']['entities']:
                     if 'type' in entity and entity['type'] == 'bot_command':
@@ -120,9 +121,6 @@ class ubot:
                             return False
             else:
                 print(f'Es un mensaje normal con el texto: {parts}')
-
-            self.update_temp('temp.py', self.message_offset )
-
 
     def update_temp(self, file_path, id_msg):
         with open(file_path, "r") as file:
