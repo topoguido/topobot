@@ -7,14 +7,14 @@ class ubot:
     def __init__(self, token, debug):
         self.url = 'https://api.telegram.org/bot' + token
         self.default_handler = None
-        self.message_offset = self.get_msg_id()
-        self.commands = self.getCommands()
         self.command = None
         self.commandOK = False
         self.chat_id = ''
         self.chat_username = ''
         self.chat_name = ''
         self.debug = debug
+        self.message_offset = self.get_msg_id()
+        self.commands = self.getCommands()
         print(f'Lista de comandos: {self.commands}')
        
     def getCommands(self):
