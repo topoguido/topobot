@@ -21,7 +21,7 @@ class ubot:
         commands = {}
         try:
             headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-            print(f'URL: {self.url}')
+            if self.debug: print(f'URL: {self.url}')
             response = urequests.get(self.url + '/getMyCommands', headers=headers, timeout=20)
             if response.status_code == 200:
                 response_json = response.json()
@@ -90,13 +90,13 @@ class ubot:
             if self.debug: print('Mensajes entrantes')
             if self.message_offset==0:
                 self.message_offset = messages[-1]['update_id']
-                print(f'MSG_ID: {self.message_offset}')
+                if self.debug: print(f'MSG_ID: {self.message_offset}')
                 return self.message_handler(messages[-1])
             else:
                 for message in messages:
                     if message['update_id'] >= self.message_offset:
                         self.message_offset = message['update_id']
-                        print(f'MSG_ID: {self.message_offset}')
+                        if self.debug: print(f'MSG_ID: {self.message_offset}')
                         return self.message_handler(message)
 
     def message_handler(self, message):
@@ -119,8 +119,8 @@ class ubot:
                             self.commandOK = False
                             self.send(message['message']['chat']['id'], 'No reconozco ese comando \U0001F611')
                             return False
-            else:
-                print(f'Es un mensaje normal con el texto: {parts}')
+                    else:
+                        print(f'Es un mensaje normal con el texto: {parts}')
 
     def update_temp(self, file_path, id_msg):
         with open(file_path, "r") as file:
