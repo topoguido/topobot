@@ -1,4 +1,5 @@
 import urequests
+import re
 from temp import msg
 
 class ubot:
@@ -6,7 +7,7 @@ class ubot:
     def __init__(self, token, debug):
         self.url = 'https://api.telegram.org/bot' + token
         self.default_handler = None
-        self.message_offset = int(msg['ultimo_id_msg'])
+        self.message_offset = msg['ultimo_id_msg']
         self.commands = self.getCommands()
         self.command = None
         self.commandOK = False
@@ -120,4 +121,18 @@ class ubot:
             else:
                 print(f'Es un mensaje normal con el texto: {parts}')
 
-            msg['ultimo_id_msg'] = int(self.message_offset)
+            self.update_temp('temp.py', self.message_offset )
+
+
+    def update_temp(self, file_path, id_msg):
+        with open(file_path, "r") as file:
+            content = file.read()
+
+        pattern = r"'ultimo_id_msg': *\d+"
+        replacement = f"'ultimo_id_msg': {id_msg}"
+        updated_content = re.sub(pattern, replacement, content)
+        with open(file_path, "w") as file:
+            file.write(updated_content)
+    
+    def get_msg_id(self):
+        return msg['ultimo_id_msg']
