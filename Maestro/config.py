@@ -14,5 +14,5 @@ wlan_com = {
 }
 
 disp_conf = {
-    'reset_delay': int(10)
+    'reset_delay': int(5)
 }
