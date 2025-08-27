@@ -25,8 +25,9 @@ if not wlan.isconnected():
                           working_dir = 'Maestro'
                           )
         
-        if OTA.update():
-            print('Nueva version de soft')
-            reset()
-        else:
-            print('Soft al dia')
+        if update_params.get('status'):
+            if OTA.update():
+                print('Nueva version de soft')
+                reset()
+            else:
+                print('Soft al dia')
