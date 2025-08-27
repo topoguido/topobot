@@ -1,4 +1,5 @@
 from config import wifi_config
+from config import update_params
 from machine import reset
 import network
 import ubinascii
@@ -17,12 +18,13 @@ if not wlan.isconnected():
     if wlan.isconnected():
         print(f'conectado a red con IP {wlan.ipconfig("addr4")}')
 
-        OTA = senko.Senko(user='topoguido', 
-                          repo='bot-radio',
-                          branch='dev', 
-                          files=['config.py','boot.py','main.py','hardware.py','utelegram.py'],
-                          working_dir='Maestro'
+        OTA = senko.Senko(user = update_params.get('user'), 
+                          repo = update_params.get('repo'),
+                          branch = update_params.get('branch'), 
+                          files = update_params.get('files'),
+                          working_dir = 'Maestro'
                           )
+        
         if OTA.update():
             print('Nueva version de soft')
             reset()
