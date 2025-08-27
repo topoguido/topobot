@@ -1,6 +1,6 @@
 wifi_config = {
-    'ssid':'CALESITA',
-    'password':'3empanadas'
+    'ssid':'manzanita',
+    'password':'benito123'
 }
 
 utelegram_config = {
