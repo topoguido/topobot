@@ -32,7 +32,7 @@ while True:
         elif bot.command == '/temp':
             # Obtiene los valores de temperatura y humedad del sensor cableado (estudio)
             sensor_st.update_values()
-            bot.send(bot.chat_id, f'Estudio: Temperatura: {sensor_st.get_temp()}° - Humedad: {sensor_st.get_hum()}%')
+            bot.send(bot.chat_id, f'Estudio: Temp: {sensor_st.get_temp()}° - Humedad: {sensor_st.get_hum()}%')
             
             # Se solicitan al dispositivo ESP01 por wifi que devuelva los datos del sensor
             # ubicados en la planta transmisora.
@@ -51,7 +51,7 @@ while True:
                     fan_status = 'Apagado'
                 else:
                     fan_status = 'sin datos'
-                bot.send(bot.chat_id, f'Transmisor: Temperatura: {temp}° - Humedad: {hum}% - Ventilador: {fan_status}')
+                bot.send(bot.chat_id, f'Transmisor: Temp: {temp}° - Humedad: {hum}% - Ventilador: {fan_status}')
             else:
                 print('No hay comunicacion con sensor de transmisor')
                 print(e.stats())
