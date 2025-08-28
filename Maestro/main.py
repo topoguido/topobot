@@ -45,11 +45,11 @@ while True:
                 temp = data[0]
                 hum = data[1]
                 fan = data[2]
-                if fan = '1':
+                if fan == '1':
                     fan_status = 'Encendido'
-                elif fan = '0':
+                elif fan == '0':
                     fan_status = 'Apagado'
-                 else:
+                else:
                     fan_status = 'sin datos'
                 bot.send(bot.chat_id, f'Transmisor: Temperatura: {temp}° - Humedad: {hum}% - Ventilador: {fan_status}')
             else:
