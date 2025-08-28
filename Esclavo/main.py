@@ -13,11 +13,12 @@ async def rele_control():
       while True:
             sensor.measure()
             temp = sensor.temperature()
-            print(f'Temperatura: {temp}')
-            if temp > 28:
+            hum = sensor.humidity()
+            print(f'Temperatura: {temp}° - Humedad: {hum}% - Fan On: {rele.value()}')
+            if temp > 24:
                 #enciende ventilador
                 rele.value(1)
-            elif temp < 28:
+            elif temp < 24:
                 rele.value(0)
             await asyncio.sleep(6)    
 
@@ -35,8 +36,8 @@ async def msg_control():
                 sensor.measure()
                 temp = sensor.temperature()
                 hum = sensor.humidity()
-                print(f'Enviando datos - Temp: {temp}° - Hum: {hum}%')
-                resp = str(temp) + ',' + str(hum)
+                print(f'Enviando datos - Temp: {temp}° - Hum: {hum}% - Fan: {rele.value()}')
+                resp = str(temp) + ',' + str(hum) + ',' + str(rele.value())
                 e.send(master, resp)
                 print(f'Datos enviado: {resp}')
             else:
