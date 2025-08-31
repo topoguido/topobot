@@ -1,6 +1,8 @@
 import urequests
 import re
-from temp import msg
+import json
+#from temp import msg
+
 
 class ubot:
     
@@ -64,10 +66,15 @@ class ubot:
         except:
             return False
 
-    def read_messages(self):
+    def read_messages(self, offset=None):
         result = []
+        if offset:
+            new_offset = offset
+        else:
+            new_offset = self.message_offset + 1
+
         self.query_updates = {
-            'offset': self.message_offset + 1,
+            'offset': new_offset,
             'limit': 1,
             'timeout': 30,
             'allowed_updates': ['message']}
@@ -102,7 +109,7 @@ class ubot:
     def message_handler(self, message):
         if 'text' in message['message']:
             parts = message['message']['text'].split(' ')
-            self.update_temp('temp.py', self.message_offset )
+            self.update_temp(self.message_offset )
             if 'entities' in message['message']:
                 for entity in message['message']['entities']:
                     if 'type' in entity and entity['type'] == 'bot_command':
@@ -122,15 +129,39 @@ class ubot:
                     else:
                         print(f'Es un mensaje normal con el texto: {parts}')
 
-    def update_temp(self, file_path, id_msg):
-        with open(file_path, "r") as file:
+    def update_temp(self, id_msg):
+        if self.debug: print(f'Metodo update_temp(id={id_msg})')
+        with open("temp.json", "r") as file:
             content = file.read()
+            file.close()
 
         pattern = r"'ultimo_id_msg': *\d+"
         replacement = f"'ultimo_id_msg': {id_msg}"
         updated_content = re.sub(pattern, replacement, content)
-        with open(file_path, "w") as file:
+        with open("temp.json", "w") as file:
             file.write(updated_content)
     
     def get_msg_id(self):
-        return msg['ultimo_id_msg']
+        if self.debug: print(f'Metodo get_msg_id()')
+        try:
+            with open("temp.json", "r") as f:
+                temp = json.load(f)
+                if self.debug: print(f'Metodo get_msg_id() - archivo existente, datos: {temp}')
+      
+        except Exception:
+            with open("temp.json", "w") as f:
+               if self.debug: print(f'Metodo get_msg_id() - Archivo no existe. Recuperando ultimo mensaje de telegram')
+               messages =  self.read_messages(offset = -1)
+               if self.debug: print(f'Mensaje {messages}')
+               if len(messages) > 0:
+                   id = int(messages[0]['update_id'])
+               else:
+                   id = 1
+                   
+               if self.debug: print(f'El id capturado es: {id}')
+               var = {'ultimo_id_msg': id}
+               if self.debug: print(f'json a escribir {var}')
+               json.dump(obj=var, file=f, indent=4)
+               return id
+
+        return temp['ultimo_id_msg']
