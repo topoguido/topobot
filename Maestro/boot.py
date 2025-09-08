@@ -19,11 +19,11 @@ if not wlan.isconnected():
     if wlan.isconnected():
         print(f'conectado a red con IP {wlan.ipconfig("addr4")}')
 
-        OTA = senko.Senko(configs.update_user,
-                          configs.update_repo,
-                          configs.update_branch, 
-                          configs.update_files,
-                          configs.update_working_dir
+        OTA = senko.Senko(user = configs.update_user,
+                          repo = configs.update_repo,
+                          branch = configs.update_branch, 
+                          files = configs.update_files,
+                          working_dir = configs.update_working_dir
                           )
         
         if configs.update_status:
