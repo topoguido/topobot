@@ -9,7 +9,7 @@
   },
 
   "device_conf": {
-    "reset_delay": 5
+    "reset_delay": 3
   },
 
   "update_params": {
