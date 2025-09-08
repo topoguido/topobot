@@ -1,20 +1,14 @@
 {
   "wifi_config": {
-    "ssid": "PELOTERO",
-    "password": "laclavees1981"
-  },
-
-  "utelegram_config": {
-    "token": "6155203747:AAHXbcoaD_Axnoor4fBVeJQW1fVG4BXjOmk",
-    "chat_id_default": "677317280",
-    "debug": true
+    "ssid": "DEEPFAKE",
+    "password": "Callefalsa123"
   },
 
   "wlan_com": {
     "mac_sensortx": "8ece4ee97325"
   },
 
-  "disp_conf": {
+  "device_conf": {
     "reset_delay": 5
   },
 
@@ -25,6 +19,8 @@
     "branch": "main",
     "files": ["boot.py", "main.py", "hardware.py", "utelegram.py"],
     "working_dir": "Maestro"
-  }
+  },
+
+  "debug": true
 }
 

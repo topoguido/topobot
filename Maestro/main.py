@@ -1,27 +1,19 @@
-import json
-
-try:
-    with open("config.json", "r") as f:
-        config = json.load(f)
-
-except json.JSONDecodeError as e:
-        print(f"Error: El archivo no tiene un formato JSON válido.")
-        print("Detalles:", e)
-
 from machine import reset
 import utelegram
 import time
 import gc
 import hardware
 import espnow
-import os
+from Configurations import Configurations
+
+configs = Configurations("main")
 
 print('Iniciando bot')
-bot = utelegram.ubot(config['utelegram_config']['token'], bool(config['utelegram_config']['debug']))
-bot.saluda(config['utelegram_config']['chat_id_default'])
+bot = utelegram.ubot(bool(configs.debug))
+bot.saluda()
 rele = hardware.rele() # relé utilizado para hacer saltar al diferencial
 sensor_st = hardware.sensor()  # sensor del estudio
-dir_sensor_tx = bytes.fromhex(config['wlan_com']['mac_sensortx'])
+dir_sensor_tx = bytes.fromhex(configs.mac_sensortx)
 e = espnow.ESPNow()
 e.active(True)
 e.add_peer(dir_sensor_tx)
@@ -77,7 +69,7 @@ while True:
 
         elif bot.command == '/reset':
             print('Reinicio de dispositivo')
-            delay = config['disp_conf']['reset_delay']
+            delay = configs.reset_delay
             bot.send(bot.chat_id, f'Ok, voy a reiniciarme en {delay} segundos.')
             time.sleep(delay)
             reset()

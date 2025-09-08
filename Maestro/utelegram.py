@@ -1,13 +1,12 @@
 import urequests
-import re
 import json
-#from temp import msg
-
+from Bot_configurations import Bot_configurations
 
 class ubot:
     
-    def __init__(self, token, debug):
-        self.url = 'https://api.telegram.org/bot' + token
+    def __init__(self, debug):
+        self.config = Bot_configurations()
+        self.url = 'https://api.telegram.org/bot' + self.config.token
         self.default_handler = None
         self.command = None
         self.commandOK = False
@@ -51,9 +50,9 @@ class ubot:
         if self.debug: print('Respondiendo al ping')
         self.send(chat_id, 'pong')
     
-    def saluda(self, chat_id):
+    def saluda(self):
         if self.debug: print('Saludando')
-        self.send(int(chat_id), 'Hola, el bot se ha iniciado')
+        self.send(int(self.config.chat_id_default), 'Hola, el bot se ha iniciado')
     
       
     def send(self, chat_id, text):
