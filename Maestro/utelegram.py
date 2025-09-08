@@ -1,11 +1,12 @@
 import urequests
-import re
-from temp import msg
+import json
+from Bot_configurations import Bot_configurations
 
 class ubot:
     
-    def __init__(self, token, debug):
-        self.url = 'https://api.telegram.org/bot' + token
+    def __init__(self, debug):
+        self.config = Bot_configurations()
+        self.url = 'https://api.telegram.org/bot' + self.config.token
         self.default_handler = None
         self.command = None
         self.commandOK = False
@@ -49,9 +50,9 @@ class ubot:
         if self.debug: print('Respondiendo al ping')
         self.send(chat_id, 'pong')
     
-    def saluda(self, chat_id):
+    def saluda(self):
         if self.debug: print('Saludando')
-        self.send(int(chat_id), 'Hola, el bot se ha iniciado')
+        self.send(int(self.config.chat_id_default), 'Hola, el bot se ha iniciado')
     
       
     def send(self, chat_id, text):
@@ -64,10 +65,30 @@ class ubot:
         except:
             return False
 
-    def read_messages(self):
+    def read_once(self):
+        messages = self.get_messages()
+        if messages:
+            if self.debug: print('Mensajes entrantes')
+            if self.message_offset==0:
+                self.message_offset = messages[-1]['update_id']
+                if self.debug: print(f'MSG_ID: {self.message_offset}')
+                return self.message_handler(messages[-1])
+            else:
+                for message in messages:
+                    if message['update_id'] >= self.message_offset:
+                        self.message_offset = message['update_id']
+                        if self.debug: print(f'MSG_ID: {self.message_offset}')
+                        return self.message_handler(message)
+
+    def get_messages(self, offset=None):
         result = []
+        if offset:
+            new_offset = offset
+        else:
+            new_offset = self.message_offset + 1
+
         self.query_updates = {
-            'offset': self.message_offset + 1,
+            'offset': new_offset,
             'limit': 1,
             'timeout': 30,
             'allowed_updates': ['message']}
@@ -84,25 +105,10 @@ class ubot:
             if self.debug: print("OSError: request timed out")
             return None
 
-    def read_once(self):
-        messages = self.read_messages()
-        if messages:
-            if self.debug: print('Mensajes entrantes')
-            if self.message_offset==0:
-                self.message_offset = messages[-1]['update_id']
-                if self.debug: print(f'MSG_ID: {self.message_offset}')
-                return self.message_handler(messages[-1])
-            else:
-                for message in messages:
-                    if message['update_id'] >= self.message_offset:
-                        self.message_offset = message['update_id']
-                        if self.debug: print(f'MSG_ID: {self.message_offset}')
-                        return self.message_handler(message)
-
     def message_handler(self, message):
         if 'text' in message['message']:
             parts = message['message']['text'].split(' ')
-            self.update_temp('temp.py', self.message_offset )
+            self.update_temp(self.message_offset )
             if 'entities' in message['message']:
                 for entity in message['message']['entities']:
                     if 'type' in entity and entity['type'] == 'bot_command':
@@ -122,15 +128,42 @@ class ubot:
                     else:
                         print(f'Es un mensaje normal con el texto: {parts}')
 
-    def update_temp(self, file_path, id_msg):
-        with open(file_path, "r") as file:
-            content = file.read()
-
-        pattern = r"'ultimo_id_msg': *\d+"
-        replacement = f"'ultimo_id_msg': {id_msg}"
-        updated_content = re.sub(pattern, replacement, content)
-        with open(file_path, "w") as file:
-            file.write(updated_content)
+    def update_temp(self, id_msg):
+        if self.debug: print(f'Metodo update_temp(id={id_msg})')
+        try:
+            with open("temp.json", "r") as file:
+                data = json.load(file)
+            
+        except (OSError, ValueError):
+            data = {}
+        data["ultimo_id_msg"] = id_msg
+        
+        with open("temp.json", "w") as file:
+            json.dump(data, file)
     
     def get_msg_id(self):
-        return msg['ultimo_id_msg']
+        if self.debug: print(f'Metodo get_msg_id()')
+        try:
+            with open("temp.json", "r") as f:
+                temp = json.load(f)
+                if self.debug: print(f'Metodo get_msg_id() - archivo existente, datos: {temp}')
+      
+        except (OSError, ValueError) as e:
+            if self.debug:
+                print(f'Excepcion: {e}')
+                print(f'Metodo get_msg_id() - Archivo no existe. Recuperando ultimo mensaje de telegram')
+            messages =  self.get_messages(offset = -1)
+            if self.debug: print(f'Mensaje {messages}')
+            if len(messages) > 0:
+                id = int(messages[0]['update_id'])
+            else:
+                id = 1
+               
+            if self.debug: print(f'El id capturado es: {id}')
+            var = {"ultimo_id_msg": id}
+            if self.debug: print(f'json a escribir {var}')
+            with open("temp.json", "w") as f:
+                json.dump(var, f)
+            return id
+
+        return temp["ultimo_id_msg"]

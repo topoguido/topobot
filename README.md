@@ -26,9 +26,51 @@ Comandos:
 
 /temp: toma los valores del DHT11 y responde al chat con ellos. Luego le solicita al esclavo (ESP8266) por medio de ESPNOW los valores de su DHT11. Al recibirlos, los envia en otro mensaje al chat.
 
-Este dispositivo contiene el archivo temp.py que no existe en el repositorio. Este archivo contiene la clave 
+Este dispositivo contiene el archivo temp.json que no existe en el repositorio. Este archivo contiene la clave 
 msg = { 'ultimo_id_msg': 941431892 } que es utilizada por el metodo que recibe los mensajes para guardar el ultimo id. De esta forma solo se tomarian mensajes con id superiores. Al llegar un mensaje, se actualiza este id. 
-Esta fué la solución al loop que genera cuando se le envia la orden de reiniciar. Levanta nuevamente y vuelve a recibir el mismo mensaje, volviendo a reiniciar y asi sucesivamente... 
+Si no encuentra el archivo, lo crea con id = 1. Al recibir un mensaje lo actualiza.
+
+--------------------------------------------------------------------------------
+Configuraciones:
+archivo: bot_config.json
+estructura:
+
+{
+    "token": "",
+    "chat_id_default": ""
+}
+
+
+
+archivo: config.json
+estructura:
+
+{
+  "wifi_config": {
+    "ssid": "DEEPFAKE",
+    "password": "Callefalsa123"
+  },
+
+  "wlan_com": {
+    "mac_sensortx": "8ece4ee97325"
+  },
+
+  "device_conf": {
+    "reset_delay": 5
+  },
+
+  "update_params": {
+    "status": false,
+    "user": "topoguido",
+    "repo": "bot-radio",
+    "branch": "main",
+    "files": ["boot.py", "main.py", "hardware.py", "utelegram.py"],
+    "working_dir": "Maestro"
+  },
+
+  "debug": true
+}
+
 
 --------------------------------------------------------------------------------
 Repositorio de GitHub: https://github.com/topoguido/bot-radio.git
