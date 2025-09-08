@@ -14,10 +14,10 @@ import time
 import gc
 import hardware
 import espnow
+import os
 
 print('Iniciando bot')
-bot = utelegram.ubot(config['utelegram_config']['token'], 
-                     bool(config['utelegram_config']['debug']))
+bot = utelegram.ubot(config['utelegram_config']['token'], bool(config['utelegram_config']['debug']))
 bot.saluda(config['utelegram_config']['chat_id_default'])
 rele = hardware.rele() # relé utilizado para hacer saltar al diferencial
 sensor_st = hardware.sensor()  # sensor del estudio
