@@ -1,5 +1,5 @@
 # bot-radio
-Bot para ejecutar acciones en la radio
+Bot para ejecutar acciones a distancia por telegram
 
 Carpeta Esclavo: 
 Código para el ESP8266
